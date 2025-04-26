@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Testar Upload de Solo</title>
+  </head>
+  <body>
+    <h1>Cadastro de Solo</h1>
+    <form
+      id="soloForm"
+      action="http://localhost:3001/api/solos"
+      method="POST"
+      enctype="multipart/form-data"
+    >
+      <div>
+        <label for="nome">Nome do Solo:</label>
+        <input type="text" name="nome" id="nome" required />
+      </div>
+      <div>
+        <label for="banda">Banda:</label>
+        <input type="text" name="banda" id="banda" required />
+      </div>
+      <div>
+        <label for="imagem">Imagem:</label>
+        <input
+          type="file"
+          name="imagem"
+          id="imagem"
+          accept="image/*"
+          required
+        />
+      </div>
+      <div>
+        <label for="audio">Áudio:</label>
+        <input type="file" name="audio" id="audio" accept="audio/*" required />
+      </div>
+      <button type="submit">Enviar</button>
+    </form>
+
+    <div id="resultado"></div>
+
+    <script>
+      document
+        .getElementById("soloForm")
+        .addEventListener("submit", async (e) => {
+          e.preventDefault(); // Impede o comportamento padrão do formulário
+
+          const formData = new FormData(e.target);
+          try {
+            const response = await fetch("http://localhost:3001/api/solos", {
+              method: "POST",
+              body: formData,
+            });
+
+            const resultado = await response.json();
+            const resultadoDiv = document.getElementById("resultado");
+
+            if (response.ok) {
+              resultadoDiv.innerHTML = `<p>Solo cadastrado com sucesso! ID: ${resultado._id}</p>`;
+            } else {
+              resultadoDiv.innerHTML = `<p>Erro: ${resultado.message}</p>`;
+            }
+          } catch (error) {
+            document.getElementById(
+              "resultado"
+            ).innerHTML = `<p>Erro na requisição: ${error.message}</p>`;
+          }
+        });
+    </script>
+  </body>
+</html>
